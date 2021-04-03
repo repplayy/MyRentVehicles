@@ -7,13 +7,13 @@ namespace MyRentVehicles.Entities
     public class Vehicles
     {
 
-        public String Marca { get; set; }
-		private String modelo;
-		private int anoFabricacao;
-		private String placa;
-		private double valorAvaliadoDoBem;
-		private double valorDiaria;
-		private int tipo;
+		public String Marca { get; set; }
+        public String Modelo { get; set; }
+        public int AnoFabricacao { get; set; }
+        public String Placa { get; set; }
+        public double ValorAvaliadoDoBem { get; set; }
+        public double  ValorDiaria { get; set; }
+        public int Tipo { get; set; }
 
 		public Vehicles()
 		{
@@ -30,17 +30,6 @@ namespace MyRentVehicles.Entities
 			this.ValorAvaliadoDoBem = valorAvaliadoDoBem;
 			this.Tipo = tipo;
 		}
-
-
-       
-        public string Modelo { get => modelo; set => modelo = value; }
-        public int AnoFabricacao { get => anoFabricacao; set => anoFabricacao = value; }
-        public string Placa { get => placa; set => placa = value; }
-        public double ValorAvaliadoDoBem { get => valorAvaliadoDoBem; set => valorAvaliadoDoBem = value; }
-		public double ValorDiaria { get => valorDiaria; set => valorDiaria = value; }
-		public int Tipo { get => tipo; set => tipo = value; }
-    
-
 		
 		public double valorSeguro(int opcao)
 		{
@@ -95,9 +84,6 @@ namespace MyRentVehicles.Entities
 			return ValorDiaria + taxa * ValorAvaliadoDoBem;
 
 		}
-
-
-
 
 
 	}

@@ -14,18 +14,15 @@ namespace MyRentVehicles.Entities
 		public Bus(String marca, String modelo, int anoFabricacao, double valorAvaliadoDoBem, double valorDiaria, String placa, int capacidadePassageiro)
 		{
 			base.Marca = marca;
-			
-
-			//(marca, modelo, anoFabricacao, valorAvaliadoDoBem, valorDiaria, placa, 3);
-
+			base.Modelo = modelo;
+			base.AnoFabricacao = anoFabricacao;
+			base.ValorAvaliadoDoBem = valorAvaliadoDoBem;
+			base.ValorDiaria = valorDiaria;
+			base.Placa = placa;
+			base.Tipo = 3;
 			this.CapacidadePassageiro = capacidadePassageiro;
 
-
-
 		}
-
-       
-
 
 	}
 }

@@ -2,7 +2,13 @@
 
 namespace MyRentVehicles.Services
 {
-    public class Class1
+    public class RentalCarsService
     {
+
+
+
+
+
+
     }
 }
