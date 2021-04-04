@@ -6,12 +6,12 @@ namespace MyRentVehicles.Entities
 {
    public class Rent 
     {
-        public int CPF { get; set; }
+        public String CPF { get; set; }
         public String Placa { get; set; }
         public int Dias { get; set; }
        
 		
-		Rent(int cpf, String placa, int dias)
+		public Rent(String cpf, String placa, int dias)
 		{
 
 			this.CPF = cpf;

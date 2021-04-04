@@ -203,8 +203,34 @@ namespace MyRentVehicles.Services
 
             }
 
-	    }
+        }
 
+
+        
+			 //calculate the valu of the rent of a vehicle 
+	public double calculateRent(String plate, int days)
+        {
+            foreach (Vehicles v in VehiclesRepository)
+            {
+                if (v.Placa.Equals(plate))
+                { //compara se já existe a placa digitada na lista do repositorio
+                    return v.valorAluguel(typeVehicle(plate), days);
+                }
+
+            }
+            return 0;
+        }
+
+        /*
+        public double consultInsurance(int otion, String plate)
+        {
+            Vehicles v = new Vehicles();
+
+            return v.valorSeguro(typeVehicle(plate));
+
+
+        }
+        */
     }
 
 }
