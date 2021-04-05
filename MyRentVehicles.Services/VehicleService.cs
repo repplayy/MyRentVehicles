@@ -5,7 +5,7 @@ using MyRentVehicles.Entities;
 
 namespace MyRentVehicles.Services
 {
-    class VehicleService
+    public class VehicleService
     {
 
 
@@ -140,9 +140,9 @@ namespace MyRentVehicles.Services
 
             if (tipo == 0)
             {
-                foreach (Vehicles t in VehiclesRepository)
+                foreach (Vehicles a in VehiclesRepository)
                 {
-                    t.ValorAvaliadoDoBem = t.valorDoBemDiminui(taxaDepreciacao);
+                    a.ValorAvaliadoDoBem = a.valorDoBemDiminui(taxaDepreciacao);
                 }
 
             }
@@ -203,12 +203,90 @@ namespace MyRentVehicles.Services
 
             }
 
+            else
+            {
+                Console.WriteLine("not found\n");
+            }
+
         }
 
+        public void increaseDaily(int tipo, double taxaAumento)
+        {
 
-        
-			 //calculate the valu of the rent of a vehicle 
-	public double calculateRent(String plate, int days)
+            if (tipo == 0)
+            {
+                foreach (Vehicles a in VehiclesRepository)
+                {
+                    a.ValorDiaria = a.ValorDiariaAumenta(taxaAumento);
+                }
+
+            }
+
+            //faz o depreciamento de cada veiculo acessando a classe de acordo com o tipo
+
+            else if (tipo == 1)
+            {
+
+                foreach (Vehicles m in VehiclesRepository)
+                {
+                    if (m is Motorcycle)
+                    {
+                        m.ValorDiaria = m.ValorDiariaAumenta(taxaAumento);
+                    }
+                }
+
+            }
+            else if (tipo == 2)
+            {
+
+                foreach (Vehicles c in VehiclesRepository)
+                {
+                    if (c is Car)
+                    {
+
+                        c.ValorDiaria = c.ValorDiariaAumenta(taxaAumento);
+                    }
+                }
+
+            }
+
+            else if (tipo == 3)
+            {
+
+                foreach (Vehicles b in VehiclesRepository)
+                {
+                    if (b is Bus)
+                    {
+
+                        b.ValorDiaria = b.ValorDiariaAumenta(taxaAumento);
+                    }
+                }
+
+            }
+
+            else if (tipo == 4)
+            {
+
+                foreach (Vehicles t in VehiclesRepository)
+                {
+                    if (t is Truck)
+                    {
+
+                        t.ValorDiaria = t.ValorDiariaAumenta(taxaAumento);
+                    }
+                }
+
+            }
+
+            else
+            {
+                Console.WriteLine("not found\n");
+            }
+
+        }
+
+        //calculate the valu of the rent of a vehicle 
+        public double calculateRent(String plate, int days)
         {
             foreach (Vehicles v in VehiclesRepository)
             {

@@ -5,7 +5,7 @@ using MyRentVehicles.Entities;
 
 namespace MyRentVehicles.Services
 {
-    class ClientService
+    public class ClientService
     {
 		public List<Client> ClientRepository = new List<Client>();
 

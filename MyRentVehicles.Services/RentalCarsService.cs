@@ -19,7 +19,7 @@ namespace MyRentVehicles.Services
 		private int diariaTotalOnibus = 0;
 		private int diariaTotalVeiculos = 0;
 
-
+		//can create method that verify until what day the vehicle will be rent
 		//verifica se a placa do transporte já foi registrado como alugado
 		public Rent rentedTransport(String plate)
 		{
@@ -36,9 +36,7 @@ namespace MyRentVehicles.Services
 		}
 
 
-
-
-		public bool reserveRent(String plate, int days, String cpf)
+		public bool registerRent(String plate, int days, String cpf)
 		{
 			Vehicles vehicle = new Vehicles();
 			Client cliente = new Client();
@@ -95,249 +93,136 @@ namespace MyRentVehicles.Services
 
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		/*
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * // metodo precisa ser revisto para adequar aos 3 tipos de testes 
-	public boolean registrarDevolucao(String placa) {
-
-
-		if (tansporteAlugado(placa) != null) {
-			RepositorioDeAluguel.remove(tansporteAlugado(placa));
-			//se entrar na condicional o transporte é removido da lista aluguel e conclui a devolução
-			return true;
-		}	
-		return false;
-	}
-
-		 * 
-		 * 
-	
-
-		 * 
-	
-	}//metodo consultar aluguel
-		//valor da diaria é fixo
-		public void consultarAluguel()
+		// metodo precisa ser revisto para adequar aos 3 tipos de testes 
+		public bool registerDevolution(String plate)
 		{
 
-			int dias;
-			String placa;
 
-			System.out.println("digite a placa do veiculo desejado\n");
-			placa = input.next();
-			System.out.println("digite a quantidade de dias\n");
-			dias = input.nextInt();
-			System.out.println("valor do aluguel: " + calcularAluguel(placa, dias));
-
+			if (rentedTransport(plate) != null)
+			{
+				RentRepository.Remove(rentedTransport(plate));
+				//se entrar na condicional o transporte é removido da lista aluguel e conclui a devolução
+				return true;
+			}
+			return false;
 		}
 
-		
-	public void aumentarDiaria(int tipo, double taxaAumento) {
+		//add a info that gives until what date the vehicle will be rent 
+		//metodo consultar aluguel
+		public void consultRent()
+		{
+			VehicleService v = new VehicleService();
+			int days;
+			String plate;
 
-
-		if(tipo==0) {
-			for (Veiculo t : RepositorioDeVeiculo) {
-
-				t.setValorDiaria(t.ValorDiariaAumenta(taxaAumento));					
-			}
-
-		}	
-
-		//faz o depreciamento de cada veiculo acessando a classe de acordo com o tipo
-
-		else if(tipo == 1 ) {
-
-			for (Veiculo m : RepositorioDeVeiculo) {	
-				if( m instanceof Moto) {
-
-					m.setValorDiaria(m.ValorDiariaAumenta(taxaAumento));
-				}	
-			}
+            Console.WriteLine("digite a placa do veiculo desejado\n");
+			plate = Console.ReadLine();
+            Console.WriteLine("digite a quantidade de dias\n");
+			days = Console.Read();
+            Console.WriteLine($"valor do aluguel: {v.calculateRent(plate, days)}" );
 
 		}
-		else if(tipo == 2 ) {
-
-
-
-
-			for (Veiculo c : RepositorioDeVeiculo) {	
-
-				if( c instanceof Carro) {
-
-					c.setValorDiaria(c.ValorDiariaAumenta(taxaAumento));
-				}	
-			}
-
-
-		}
-		else if(tipo == 4) {
-
-			for (Veiculo C : RepositorioDeVeiculo) {	
-				if( C instanceof Caminhao) {
-
-					C.setValorDiaria(C.ValorDiariaAumenta(taxaAumento));
-				}		
-			}
-
-		}
-		else if(tipo == 3) {
-
-			for (Veiculo o : RepositorioDeVeiculo) {	
-
-				if( o instanceof Onibus) {
-
-					o.setValorDiaria(o.ValorDiariaAumenta(taxaAumento));
-				}		
-			}
-		}
-
-
-		else {
-			System.out.println("not found\n");
-
-		}		
-
-
-
-
-	}
+	
+	
 
 	//não implementado
 
 	//fazer calculo de acordo com o tipo de veiculo 
 	//pegando os carros já alugados no reposuitorio de aluguel , consultando o valor de cada carro alugado
-	public double faturamentoTotal(int tipo,Date ontem,Date amanha) {
+		public double totalBiling(int tipo) 
+		{
 
-		if(tipo==0) {
+			if (tipo == 0)
+			{
 
-			return valorTotalVeiculos;
-		}		
-
-
-		else if(tipo == 1 ) {
-
-
-			return valorTotalMoto;
-		}			
+				return valorTotalVeiculos;
+			}
 
 
-		else if(tipo == 2 ) {
-
-			return valorTotalCarro;
-		}		
+			else if (tipo == 1)
+			{
 
 
-		else if(tipo == 4 ) {
-
-			return valorTotalCaminhao;
-		}		
-
-		else if(tipo == 3 ) {
-
-			return valorTotalOnibus;
-		}		
+				return valorTotalMoto;
+			}
 
 
-		System.out.println("not found\n");
-		return 0;
+			else if (tipo == 2)
+			{
+
+				return valorTotalCarro;
+			}
 
 
+			else if (tipo == 4)
+			{
 
-	}
+				return valorTotalCaminhao;
+			}
+
+			else if (tipo == 3)
+			{
+
+				return valorTotalOnibus;
+			}
+			else
+			{
+                Console.WriteLine("not found\n");
+				return 0;
+
+			}
+
+		}
+
 	//fazer todo calculo de diarias pegando no repositorio de aluguel e somando de acordo com o tipo
-	public int quantidadeTotalDeDiarias(int tipo,Date ontem,Date amanha) {
+		public int totalAmountOfDaily(int tipo)
+		{
 
-		if(tipo==0) {
+			if (tipo == 0)
+			{
 
-			return diariaTotalVeiculos;
+				return diariaTotalVeiculos;
 
-		}	
+			}
 
-		else if(tipo==1) {
+			else if (tipo == 1)
+			{
 
+				return diariaTotalMoto;
 
+			}
 
-			return diariaTotalMoto;
+			else if (tipo == 2)
+			{
 
+				return diariaTotalCarro;
 
+			}
+
+			else if (tipo == 4)
+			{
+
+				return diariaTotalCaminhao;
+
+			}
+
+			else if (tipo == 3)
+			{
+
+				return diariaTotalOnibus;
+
+			}
+
+			else
+			{
+				Console.WriteLine("not found\n");
+				return 0;
+			}
+				
 		}
 
-		else if(tipo == 2 ) {
 
 
-
-			return diariaTotalCarro;
-
-		}
-
-		else if(tipo == 4 ) {
-
-
-
-			return diariaTotalCaminhao;
-		}			
-
-		else if(tipo == 3 ) {
-
-
-
-			return diariaTotalOnibus;
-
-		}
-
-
-
-		System.out.println("not found\n");
-		return 0;
-
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-		*/
+		
 	}
 }
