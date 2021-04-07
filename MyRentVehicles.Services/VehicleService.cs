@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MyRentVehicles.Entities;
+using System.Linq;
 
 namespace MyRentVehicles.Services
 {
@@ -14,14 +15,21 @@ namespace MyRentVehicles.Services
         //insere o clente no repositorio cliente 
         public Vehicles searchPlate(String placa)
         {
-            foreach (Vehicles v in VehiclesRepository)
-            {
-                if (v.Placa.Equals(placa))
-                {
-                    return v;
-                }
-            }
-            return null;
+            //foreach (Vehicles v in VehiclesRepository)
+            //{
+            //    if (v.Placa.Replace("-","").ToLower().Equals(placa.ToLower()))
+            //    {
+            //        return v;
+            //    }
+            //}
+
+          //  var result = VehiclesRepository.Where(x => x.Placa == placa);
+
+           // return resultt == null ? null : result.FirstOrDefault();
+
+            return VehiclesRepository.Where(x => x.Placa == placa)?.FirstOrDefault();
+
+            
             //implementar metodo que pesquisa o codigo produto
         }
 

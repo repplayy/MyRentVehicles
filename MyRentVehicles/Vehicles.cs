@@ -81,7 +81,7 @@ namespace MyRentVehicles.Entities
 		public double ValorDiariaAumenta(double taxa)
 		{
 
-			return ValorDiaria + taxa * ValorAvaliadoDoBem;
+			return ValorDiaria + taxa * ValorDiaria;
 
 		}
 
