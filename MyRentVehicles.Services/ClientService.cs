@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using MyRentVehicles.Entities;
+using System.Linq;
+using MyRentVehicles.DAO;
 
 namespace MyRentVehicles.Services
 {
@@ -12,25 +14,17 @@ namespace MyRentVehicles.Services
         //insere o clente no repositorio cliente 
         public Client searchCpf(String cpf)
         {
-
-            foreach (Client c in ClientRepository)
-            {
-                if (c.CPF.Equals(cpf))
-                {
-                    return c;
-                }
-            }
-            return null;
-            //implementar metodo que pesquisa o codigo produto
+           
+            return ClientRepository.Where(x => x.CPF == cpf)?.FirstOrDefault();
         }
 
         public Boolean registerClient(Client c)
         {
-
+            DAOClient client = new DAOClient();
             Client cliente = searchCpf(c.CPF);
             if (cliente == null)
             {
-                ClientRepository.Add(c);
+                client.save(c);
                 return true;
             }
             return false;

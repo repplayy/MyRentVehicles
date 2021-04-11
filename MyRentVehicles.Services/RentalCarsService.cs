@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using MyRentVehicles.Entities;
+using System.Linq;
+using MyRentVehicles.DAO;
 
 namespace MyRentVehicles.Services
 {
@@ -23,29 +25,19 @@ namespace MyRentVehicles.Services
         //verifica se a placa do transporte já foi registrado como alugado
         public Rent rentedTransport(String plate)
         {
-
-            foreach (Rent vehicle in RentRepository)
-            {
-                if (vehicle.Placa.Equals(plate))
-                { //compara se já existe a placa está registrada na lista do repositorio aluguel
-                    
-                    return vehicle;
-                }
-
-            }
-            return null;
+            return RentRepository.Where(x => x.Placa == plate)?.FirstOrDefault();
         }
 
-        
+
         public bool registerRent(Vehicles vehicle, int days, Client cliente)
         {
-
+            DAORent daorent = new DAORent();
             Rent rent = new Rent(cliente.CPF, vehicle.Placa, days);
 
             if (rentedTransport(vehicle.Placa) == null)
             { //condicional para placa não encontrada no repositorio de aluguel
 
-               
+
 
                 if (vehicle is Motorcycle)
                 {
@@ -73,11 +65,11 @@ namespace MyRentVehicles.Services
                     valorTotalVeiculos += vehicle.valorAluguel(1, days);
                     diariaTotalCaminhao += days;
 
-                }               
+                }
                 diariaTotalVeiculos += days;
 
 
-                RentRepository.Add(rent);
+                daorent.save(rent);
                 return true;
                 //se entrar na condicional o transporte é registrado no repositorio de aluguel
             }
@@ -89,7 +81,6 @@ namespace MyRentVehicles.Services
         // metodo precisa ser revisto para adequar aos 3 tipos de testes 
         public bool registerDevolution(String plate)
         {
-
 
             if (rentedTransport(plate) != null)
             {
@@ -125,43 +116,26 @@ namespace MyRentVehicles.Services
         public double totalBiling(int tipo)
         {
 
-            if (tipo == 0)
+            switch (tipo)
             {
+                case 0:
+                    return valorTotalVeiculos;
+                case 1:
 
-                return valorTotalVeiculos;
-            }
+                    return valorTotalMoto;
+                case 2:
 
+                    return valorTotalCarro;
+                case 3:
 
-            else if (tipo == 1)
-            {
+                    return valorTotalOnibus;
+                case 4:
 
+                    return valorTotalCaminhao;
 
-                return valorTotalMoto;
-            }
-
-
-            else if (tipo == 2)
-            {
-
-                return valorTotalCarro;
-            }
-
-
-            else if (tipo == 4)
-            {
-
-                return valorTotalCaminhao;
-            }
-
-            else if (tipo == 3)
-            {
-
-                return valorTotalOnibus;
-            }
-            else
-            {
-                Console.WriteLine("not found\n");
-                return 0;
+                default:
+                    Console.WriteLine("opcao invalida\n");
+                    return 0;
 
             }
 
@@ -171,51 +145,29 @@ namespace MyRentVehicles.Services
         public int totalAmountOfDaily(int tipo)
         {
 
-            if (tipo == 0)
+            switch (tipo)
             {
+                case 0:
+                    return diariaTotalVeiculos;
+                case 1:
 
-                return diariaTotalVeiculos;
+                    return diariaTotalMoto;
+                case 2:
+
+                    return diariaTotalCarro;
+                case 3:
+
+                    return diariaTotalOnibus;
+                case 4:
+
+                    return diariaTotalCaminhao;
+
+                default:
+                    Console.WriteLine("opcao invalida\n");
+                    return 0;
 
             }
-
-            else if (tipo == 1)
-            {
-
-                return diariaTotalMoto;
-
-            }
-
-            else if (tipo == 2)
-            {
-
-                return diariaTotalCarro;
-
-            }
-
-            else if (tipo == 4)
-            {
-
-                return diariaTotalCaminhao;
-
-            }
-
-            else if (tipo == 3)
-            {
-
-                return diariaTotalOnibus;
-
-            }
-
-            else
-            {
-                Console.WriteLine("not found\n");
-                return 0;
-            }
-
-        }
-
-
-
+        }  
 
     }
 }

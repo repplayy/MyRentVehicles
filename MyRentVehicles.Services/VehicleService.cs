@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MyRentVehicles.Entities;
 using System.Linq;
+using MyRentVehicles.DAO;
 
 namespace MyRentVehicles.Services
 {
@@ -15,31 +16,16 @@ namespace MyRentVehicles.Services
         //insere o clente no repositorio cliente 
         public Vehicles searchPlate(String placa)
         {
-            //foreach (Vehicles v in VehiclesRepository)
-            //{
-            //    if (v.Placa.Replace("-","").ToLower().Equals(placa.ToLower()))
-            //    {
-            //        return v;
-            //    }
-            //}
-
-          //  var result = VehiclesRepository.Where(x => x.Placa == placa);
-
-           // return resultt == null ? null : result.FirstOrDefault();
-
             return VehiclesRepository.Where(x => x.Placa == placa)?.FirstOrDefault();
-
-            
-            //implementar metodo que pesquisa o codigo produto
         }
 
         public Boolean registerVehicles(Vehicles v)
         {
-
+            DAOVehicle daovehicle = new DAOVehicle();
             Vehicles vehicle = searchPlate(v.Placa);
             if (vehicle == null)
             {
-                VehiclesRepository.Add(v);
+                daovehicle.save(v);
                 return true;
             }
             return false;
@@ -55,15 +41,15 @@ namespace MyRentVehicles.Services
             foreach (Vehicles motorcycle in VehiclesRepository)
             {
                 if (motorcycle is Motorcycle)
-              {
-                if (((Motorcycle)motorcycle).Cilindradas >= displacement)
                 {
+                    if (((Motorcycle)motorcycle).Cilindradas >= displacement)
+                    {
                         Displacement.Add(motorcycle);
+                    }
                 }
             }
-        }
             return Displacement;
-         
+
         }
 
         //return a list of car the same category
@@ -92,7 +78,6 @@ namespace MyRentVehicles.Services
             List<Vehicles> PassangerCapacity = new List<Vehicles>();
             foreach (Vehicles bus in VehiclesRepository)
             {
-                if (bus is Bus)
                 {
                     if (((Bus)bus).CapacidadePassageiro >= capacity)
                     {
@@ -144,151 +129,129 @@ namespace MyRentVehicles.Services
         public void depreciateVehicles(int tipo, double taxaDepreciacao)
         {
 
-
-
-            if (tipo == 0)
+            switch (tipo)
             {
-                foreach (Vehicles a in VehiclesRepository)
-                {
-                    a.ValorAvaliadoDoBem = a.valorDoBemDiminui(taxaDepreciacao);
-                }
+                case 0:
 
-            }
-
-            //faz o depreciamento de cada veiculo acessando a classe de acordo com o tipo
-
-            else if (tipo == 1)
-            {
-
-                foreach (Vehicles m in VehiclesRepository)
-                {
-                    if (m is Motorcycle) 
+                    foreach (Vehicles a in VehiclesRepository)
                     {
-                      m.ValorAvaliadoDoBem = m.valorDoBemDiminui(taxaDepreciacao);
+                        a.ValorAvaliadoDoBem = a.valorDoBemDiminui(taxaDepreciacao);
                     }
-                }
+                    break;
+                case 1:
 
-            }
-		    else if(tipo == 2 )
-            {
-
-			    foreach (Vehicles c in VehiclesRepository)
-                {	
-				    if(c is Car)
+                    foreach (Vehicles m in VehiclesRepository)
                     {
-
-                     c.ValorAvaliadoDoBem = c.valorDoBemDiminui(taxaDepreciacao);
-				    }
-                }
-
-		    }
-
-            else if (tipo == 3)
-            {
-
-                foreach (Vehicles b in VehiclesRepository)
-                {
-                    if (b is Bus)
-                    {
-
-                        b.ValorAvaliadoDoBem = b.valorDoBemDiminui(taxaDepreciacao);
+                        if (m is Motorcycle)
+                        {
+                            m.ValorAvaliadoDoBem = m.valorDoBemDiminui(taxaDepreciacao);
+                        }
                     }
-                }
+                    break;
+                case 2:
 
-            }
 
-            else if (tipo == 4)
-            {
-
-                foreach (Vehicles t in VehiclesRepository)
-                {
-                    if (t is Truck)
+                    foreach (Vehicles c in VehiclesRepository)
                     {
+                        if (c is Car)
+                        {
 
-                        t.ValorAvaliadoDoBem = t.valorDoBemDiminui(taxaDepreciacao);
+                            c.ValorAvaliadoDoBem = c.valorDoBemDiminui(taxaDepreciacao);
+                        }
                     }
-                }
+                    break;
+                case 3:
+
+                    foreach (Vehicles b in VehiclesRepository)
+                    {
+                        if (b is Bus)
+                        {
+
+                            b.ValorAvaliadoDoBem = b.valorDoBemDiminui(taxaDepreciacao);
+                        }
+                    }
+                    break;
+                case 4:
+
+                    foreach (Vehicles t in VehiclesRepository)
+                    {
+                        if (t is Truck)
+                        {
+
+                            t.ValorAvaliadoDoBem = t.valorDoBemDiminui(taxaDepreciacao);
+                        }
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("opcao invalida\n");
+                    break;
 
             }
 
-            else
-            {
-                Console.WriteLine("not found\n");
-            }
+          
 
         }
 
         public void increaseDaily(int tipo, double taxaAumento)
         {
 
-            if (tipo == 0)
+            switch (tipo)
             {
-                foreach (Vehicles a in VehiclesRepository)
-                {
-                    a.ValorDiaria = a.ValorDiariaAumenta(taxaAumento);
-                }
-
-            }
-
-            //faz o depreciamento de cada veiculo acessando a classe de acordo com o tipo
-
-            else if (tipo == 1)
-            {
-
-                foreach (Vehicles m in VehiclesRepository)
-                {
-                    if (m is Motorcycle)
+                case 0:
+                    foreach (Vehicles a in VehiclesRepository)
                     {
-                        m.ValorDiaria = m.ValorDiariaAumenta(taxaAumento);
+                        a.ValorDiaria = a.ValorDiariaAumenta(taxaAumento);
                     }
-                }
+                    break;
+                case 1:
 
-            }
-            else if (tipo == 2)
-            {
-
-                foreach (Vehicles c in VehiclesRepository)
-                {
-                    if (c is Car)
+                    foreach (Vehicles m in VehiclesRepository)
                     {
-
-                        c.ValorDiaria = c.ValorDiariaAumenta(taxaAumento);
+                        if (m is Motorcycle)
+                        {
+                            m.ValorDiaria = m.ValorDiariaAumenta(taxaAumento);
+                        }
                     }
-                }
+                    break;
+                case 2:
 
-            }
-
-            else if (tipo == 3)
-            {
-
-                foreach (Vehicles b in VehiclesRepository)
-                {
-                    if (b is Bus)
+                    foreach (Vehicles c in VehiclesRepository)
                     {
+                        if (c is Car)
+                        {
 
-                        b.ValorDiaria = b.ValorDiariaAumenta(taxaAumento);
+                            c.ValorDiaria = c.ValorDiariaAumenta(taxaAumento);
+                        }
                     }
-                }
+                    break;
+                case 3:
 
-            }
-
-            else if (tipo == 4)
-            {
-
-                foreach (Vehicles t in VehiclesRepository)
-                {
-                    if (t is Truck)
+                    foreach (Vehicles b in VehiclesRepository)
                     {
+                        if (b is Bus)
+                        {
 
-                        t.ValorDiaria = t.ValorDiariaAumenta(taxaAumento);
+                            b.ValorDiaria = b.ValorDiariaAumenta(taxaAumento);
+                        }
                     }
-                }
+                    break;
+                case 4:
 
-            }
+                    foreach (Vehicles t in VehiclesRepository)
+                    {
+                        if (t is Truck)
+                        {
 
-            else
-            {
-                Console.WriteLine("not found\n");
+                            t.ValorDiaria = t.ValorDiariaAumenta(taxaAumento);
+                        }
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("opcao invalida\n");
+                    break;
+
             }
 
         }
