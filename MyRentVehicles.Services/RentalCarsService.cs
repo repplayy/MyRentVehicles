@@ -8,6 +8,18 @@ namespace MyRentVehicles.Services
 {
     public class RentalCarsService
     {
+
+        public RentalCarsService()
+        {
+            DAORent daorent = new DAORent();
+            
+
+                daorent.deleteAll();
+        }
+
+       
+    
+        
         public List<Rent> RentRepository = new List<Rent>();
 
         private double valorTotalMoto = 0;
@@ -25,7 +37,9 @@ namespace MyRentVehicles.Services
         //verifica se a placa do transporte já foi registrado como alugado
         public Rent rentedTransport(String plate)
         {
-            return RentRepository.Where(x => x.Placa == plate)?.FirstOrDefault();
+            DAORent daorent = new DAORent();
+            //return RentRepository.Where(x => x.Placa == plate)?.FirstOrDefault();
+            return daorent.recueByPlate(plate);
         }
 
 

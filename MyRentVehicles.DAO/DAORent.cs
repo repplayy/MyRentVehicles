@@ -11,6 +11,7 @@ namespace MyRentVehicles.DAO
     {
         Connection connection;
         SqlCommand cmd;
+        SqlDataReader dr;
         public String mensagem;
 
         public void save(Rent rent)
@@ -37,7 +38,7 @@ namespace MyRentVehicles.DAO
             }
             catch (SqlException)
             {
-
+                connection.disconnect();
                 this.mensagem = "erro ao se conectar banco de dados";
             }
 
@@ -46,10 +47,81 @@ namespace MyRentVehicles.DAO
 
         }
 
-       
+        public Rent recueByPlate(String plate)
+        {
+            cmd = new SqlCommand();
+            connection = new Connection();
+            //comando sql ---
+            cmd.CommandText = "select * from locadora.dbo.Rent where placa = @placa";
+            //parametros 
+            cmd.Parameters.AddWithValue("@placa",plate);
+          
 
 
-      
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        String daoplaca = (string)dr["placa"];
+                        String daocpf = (string)dr["CPF"];
+                        int daodias = (int)dr["dias"];
+                        connection.disconnect();
+                        Rent r = new Rent(daocpf,daoplaca,daodias);
+                        return r;
+                    }
+                }
+                //desconectar
+                connection.disconnect();
+                //mostrar mensagem de erro ou sucesso
+                this.mensagem = "encontrado com sucesso";
+                return null;
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+                return null;
+            }
+
+
+
+
+        }
+        public void deleteAll()
+        {
+            connection = new Connection();
+            cmd = new SqlCommand();
+            //comando sql ---
+            cmd.CommandText = "delete from locadora.dbo.Rent";
+
+
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                //desconectar
+                connection.disconnect();
+                //mostrar mensagem de erro ou sucesso
+                this.mensagem = "apagado";
+            }
+            catch (SqlException)
+            {
+
+                this.mensagem = "erro ao se conectar banco de dados";
+            }
+
+        }
+
+
+
 
 
 

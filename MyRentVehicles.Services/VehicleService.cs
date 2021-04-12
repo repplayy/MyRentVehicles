@@ -10,13 +10,20 @@ namespace MyRentVehicles.Services
     public class VehicleService
     {
 
+        //public VehicleService()
+        //{
 
+        //    DAOVehicle daovehicle = new DAOVehicle();
+        //    daovehicle.deleteAll();
+
+        //}
         public List<Vehicles> VehiclesRepository = new List<Vehicles>();
 
         //insere o clente no repositorio cliente 
         public Vehicles searchPlate(String placa)
         {
-            return VehiclesRepository.Where(x => x.Placa == placa)?.FirstOrDefault();
+            DAOVehicle daovehicle = new DAOVehicle();
+            return daovehicle.recueByPlate(placa);
         }
 
         public Boolean registerVehicles(Vehicles v)
@@ -189,7 +196,7 @@ namespace MyRentVehicles.Services
 
             }
 
-          
+
 
         }
 

@@ -9,13 +9,23 @@ namespace MyRentVehicles.Services
 {
     public class ClientService
     {
-		public List<Client> ClientRepository = new List<Client>();
+       public ClientService()
+        {
+            DAOClient client = new DAOClient();
+            client.deleteAll();
+
+
+        }
+
+        public List<Client> ClientRepository = new List<Client>();
 
         //insere o clente no repositorio cliente 
         public Client searchCpf(String cpf)
         {
-           
-            return ClientRepository.Where(x => x.CPF == cpf)?.FirstOrDefault();
+            DAOClient client = new DAOClient();
+
+            //return ClientRepository.Where(x => x.CPF == cpf)?.FirstOrDefault();
+            return client.rescueCPF(cpf);
         }
 
         public Boolean registerClient(Client c)

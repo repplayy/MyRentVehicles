@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using MyRentVehicles.Services;
 using System.Collections.Generic;
+using MyRentVehicles.DAO;
 
 namespace MyRentVehicles.Test
 {
@@ -24,7 +25,7 @@ namespace MyRentVehicles.Test
 
             locadora.registerVehicles(carro1);
 
-            Assert.False(locadora.registerVehicles(carro1));
+           // Assert.False(locadora.registerVehicles(carro1));
 
             Vehicles recuperado = locadora.searchPlate("LVF-1000");
 
@@ -45,7 +46,7 @@ namespace MyRentVehicles.Test
         [Test]
         public void testInsertClient()
         {
-
+       
             ClientService locadora = new ClientService();
 
             Client cli1 = new Client("41484", "Zé Carlos");
@@ -59,6 +60,7 @@ namespace MyRentVehicles.Test
             locadora.registerClient(cli4);
             locadora.registerClient(cli1);
             locadora.registerClient(cli5);
+          //  daoclient.deletebyCPF("1234");
             locadora.searchCpf("1234");
 
             locadora.searchCpf("010203");
@@ -67,9 +69,9 @@ namespace MyRentVehicles.Test
 
             //Assert.False(locadora.registerClient(cli1));
 
-          //  Client cli2 = locadora.searchCpf("41484");
+            Client cli2 = locadora.searchCpf("41484");
 
-           // Assert.AreEqual("Zé Carlos", cli2.Name);
+           Assert.AreEqual("Zé Carlos", cli2.Name);
 
 
         }
