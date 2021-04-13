@@ -10,13 +10,13 @@ namespace MyRentVehicles.Services
     public class VehicleService
     {
 
-        //public VehicleService()
-        //{
+        public VehicleService()
+        {
 
-        //    DAOVehicle daovehicle = new DAOVehicle();
-        //    daovehicle.deleteAll();
+            DAOVehicle daovehicle = new DAOVehicle();
+            daovehicle.deleteAll();
 
-        //}
+        }
         public List<Vehicles> VehiclesRepository = new List<Vehicles>();
 
         //insere o clente no repositorio cliente 
@@ -44,8 +44,10 @@ namespace MyRentVehicles.Services
         //retorna uma lista de motos de acordo com as cilindradas pesquisadas
         public List<Vehicles> searchMotorcycle(int displacement)
         {
+            DAOVehicle daovehicle = new DAOVehicle();
+
             List<Vehicles> Displacement = new List<Vehicles>();
-            foreach (Vehicles motorcycle in VehiclesRepository)
+            foreach (Vehicles motorcycle in daovehicle.RecueByType(1))
             {
                 if (motorcycle is Motorcycle)
                 {
@@ -57,13 +59,16 @@ namespace MyRentVehicles.Services
             }
             return Displacement;
 
+          
         }
 
         //return a list of car the same category
         public List<Vehicles> searchCar(int typeCar)
         {
+
+            DAOVehicle daovehicle = new DAOVehicle();
             List<Vehicles> CarCategory = new List<Vehicles>();
-            foreach (Vehicles car in VehiclesRepository)
+            foreach (Vehicles car in daovehicle.RecueByType(2))
             {
                 if (car is Car)
                 {
@@ -75,6 +80,9 @@ namespace MyRentVehicles.Services
             }
             return CarCategory;
 
+
+           
+           
         }
 
 
@@ -82,8 +90,9 @@ namespace MyRentVehicles.Services
         //return a list of bus the same passanger capacity
         public List<Vehicles> searchBus(int capacity)
         {
+            DAOVehicle daovehicle = new DAOVehicle();
             List<Vehicles> PassangerCapacity = new List<Vehicles>();
-            foreach (Vehicles bus in VehiclesRepository)
+            foreach (Vehicles bus in daovehicle.RecueByType(3))
             {
                 {
                     if (((Bus)bus).CapacidadePassageiro >= capacity)
@@ -93,15 +102,15 @@ namespace MyRentVehicles.Services
                 }
             }
             return PassangerCapacity;
-
         }
 
 
         //return a list of truck the same load capacity
         public List<Vehicles> searchTruck(int capacity)
         {
+            DAOVehicle daovehicle = new DAOVehicle();
             List<Vehicles> loadCapacity = new List<Vehicles>();
-            foreach (Vehicles truck in VehiclesRepository)
+            foreach (Vehicles truck in daovehicle.RecueByType(4))
             {
                 if (truck is Truck)
                 {
@@ -113,20 +122,16 @@ namespace MyRentVehicles.Services
             }
             return loadCapacity;
 
+
         }
 
 
         //return the type of vehicle
         public int typeVehicle(String placa)
         {
-            foreach (Vehicles transporte in VehiclesRepository)
-            {
-                if (transporte.Placa.Equals(placa))
-                { //compara se já existe a placa digitada na lista do repositorio
-                    return transporte.Tipo;
-                }
-            }
-            return 0;
+            DAOVehicle daovehicle = new DAOVehicle();
+           return daovehicle.recueByPlate(placa) == null ? 0 : daovehicle.recueByPlate(placa).Tipo;
+           
 
         }
 
@@ -135,6 +140,7 @@ namespace MyRentVehicles.Services
         //metodo pode ser melhorado 
         public void depreciateVehicles(int tipo, double taxaDepreciacao)
         {
+            DAOVehicle daovehicle = new DAOVehicle();
 
             switch (tipo)
             {
@@ -142,50 +148,51 @@ namespace MyRentVehicles.Services
 
                     foreach (Vehicles a in VehiclesRepository)
                     {
-                        a.ValorAvaliadoDoBem = a.valorDoBemDiminui(taxaDepreciacao);
+                        daovehicle.updateValueALLVehicles(a.valorDoBemDiminui(taxaDepreciacao));
                     }
+
                     break;
                 case 1:
 
-                    foreach (Vehicles m in VehiclesRepository)
+                    foreach (Vehicles m in daovehicle.RecueByType(tipo))
                     {
                         if (m is Motorcycle)
                         {
-                            m.ValorAvaliadoDoBem = m.valorDoBemDiminui(taxaDepreciacao);
+                            daovehicle.updateValueVehiclesBytype(tipo, m.valorDoBemDiminui(taxaDepreciacao));
                         }
                     }
                     break;
                 case 2:
 
 
-                    foreach (Vehicles c in VehiclesRepository)
+                    foreach (Vehicles c in daovehicle.RecueByType(tipo))
                     {
                         if (c is Car)
                         {
 
-                            c.ValorAvaliadoDoBem = c.valorDoBemDiminui(taxaDepreciacao);
+                            daovehicle.updateValueVehiclesBytype(tipo, c.valorDoBemDiminui(taxaDepreciacao));
                         }
                     }
                     break;
                 case 3:
 
-                    foreach (Vehicles b in VehiclesRepository)
+                    foreach (Vehicles b in daovehicle.RecueByType(tipo))
                     {
                         if (b is Bus)
                         {
 
-                            b.ValorAvaliadoDoBem = b.valorDoBemDiminui(taxaDepreciacao);
+                            daovehicle.updateValueVehiclesBytype(tipo, b.valorDoBemDiminui(taxaDepreciacao));
                         }
                     }
                     break;
                 case 4:
 
-                    foreach (Vehicles t in VehiclesRepository)
+                    foreach (Vehicles t in daovehicle.RecueByType(tipo))
                     {
                         if (t is Truck)
                         {
 
-                            t.ValorAvaliadoDoBem = t.valorDoBemDiminui(taxaDepreciacao);
+                            daovehicle.updateValueVehiclesBytype(tipo, t.valorDoBemDiminui(taxaDepreciacao));
                         }
                     }
                     break;
@@ -202,55 +209,55 @@ namespace MyRentVehicles.Services
 
         public void increaseDaily(int tipo, double taxaAumento)
         {
-
+            DAOVehicle daovehicle = new DAOVehicle();
             switch (tipo)
             {
                 case 0:
-                    foreach (Vehicles a in VehiclesRepository)
+                    foreach (Vehicles a in daovehicle.RecueByType(tipo))
                     {
-                        a.ValorDiaria = a.ValorDiariaAumenta(taxaAumento);
+                       daovehicle.updateDailyALLVehicles( a.ValorDiariaAumenta(taxaAumento));
                     }
                     break;
                 case 1:
 
-                    foreach (Vehicles m in VehiclesRepository)
+                    foreach (Vehicles m in daovehicle.RecueByType(tipo))
                     {
                         if (m is Motorcycle)
                         {
-                            m.ValorDiaria = m.ValorDiariaAumenta(taxaAumento);
+                           daovehicle.updateDailyVehiclesByType (tipo, m.ValorDiariaAumenta(taxaAumento));
                         }
                     }
                     break;
                 case 2:
 
-                    foreach (Vehicles c in VehiclesRepository)
+                    foreach (Vehicles c in daovehicle.RecueByType(tipo))
                     {
                         if (c is Car)
                         {
 
-                            c.ValorDiaria = c.ValorDiariaAumenta(taxaAumento);
+                            daovehicle.updateDailyVehiclesByType(tipo, c.ValorDiariaAumenta(taxaAumento));
                         }
                     }
                     break;
                 case 3:
 
-                    foreach (Vehicles b in VehiclesRepository)
+                    foreach (Vehicles b in daovehicle.RecueByType(tipo))
                     {
                         if (b is Bus)
                         {
 
-                            b.ValorDiaria = b.ValorDiariaAumenta(taxaAumento);
+                            daovehicle.updateDailyVehiclesByType(tipo, b.ValorDiariaAumenta(taxaAumento));
                         }
                     }
                     break;
                 case 4:
 
-                    foreach (Vehicles t in VehiclesRepository)
+                    foreach (Vehicles t in daovehicle.RecueByType(tipo))
                     {
                         if (t is Truck)
                         {
 
-                            t.ValorDiaria = t.ValorDiariaAumenta(taxaAumento);
+                            daovehicle.updateDailyVehiclesByType(tipo, t.ValorDiariaAumenta(taxaAumento));
                         }
                     }
                     break;
@@ -266,15 +273,11 @@ namespace MyRentVehicles.Services
         //calculate the valu of the rent of a vehicle 
         public double calculateRent(String plate, int days)
         {
-            foreach (Vehicles v in VehiclesRepository)
-            {
-                if (v.Placa.Equals(plate))
-                { //compara se já existe a placa digitada na lista do repositorio
-                    return v.valorAluguel(typeVehicle(plate), days);
-                }
+            DAOVehicle daovehicle = new DAOVehicle();
 
-            }
-            return 0;
+            return daovehicle.recueByPlate(plate) == null ? 0 : 
+                daovehicle.recueByPlate(plate).valorAluguel(typeVehicle(plate), days);
+            
         }
 
         /*

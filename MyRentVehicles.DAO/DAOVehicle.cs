@@ -15,7 +15,7 @@ namespace MyRentVehicles.DAO
 
 
 
-        public void save (Vehicles vehicle)
+        public void save(Vehicles vehicle)
         {
             int categoriaCarro = 0;
             int cargaCaminhao = 0;
@@ -24,27 +24,27 @@ namespace MyRentVehicles.DAO
             connection = new Connection();
             cmd = new SqlCommand();
             if (vehicle is Car)
-		{
+            {
 
                 categoriaCarro = ((Car)vehicle).CategoriaCarro;
 
             }
             if (vehicle is Motorcycle)
-		{
+            {
 
                 cilindradas = ((Motorcycle)vehicle).Cilindradas;
 
             }
 
             if (vehicle is Truck)
-		{
+            {
 
                 cargaCaminhao = ((Truck)vehicle).CapacidadeCarga;
 
             }
 
             if (vehicle is Bus)
-		{
+            {
 
                 passageiros = ((Bus)vehicle).CapacidadePassageiro;
 
@@ -64,7 +64,7 @@ namespace MyRentVehicles.DAO
             cmd.Parameters.AddWithValue("cilindrada", cilindradas);
             cmd.Parameters.AddWithValue("passageiro", passageiros);
             cmd.Parameters.AddWithValue("discriminador", vehicle.Tipo);
-            
+
 
 
             try
@@ -85,7 +85,7 @@ namespace MyRentVehicles.DAO
             finally
             {
                 connection.disconnect();
-                
+
             }
 
 
@@ -129,11 +129,11 @@ namespace MyRentVehicles.DAO
                         if (daodiscriminador == 1)
                         {
                             connection.disconnect();
-                            Vehicles v = new Motorcycle(daomarca,daomodelo,daoano,daovaloravaliado,daovalordiaria,daoplaca,daocilindrada);
+                            Vehicles v = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
                             return v;
 
                         }
-                        else if(daodiscriminador == 2)
+                        else if (daodiscriminador == 2)
                         {
                             connection.disconnect();
                             Vehicles v = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
@@ -142,13 +142,13 @@ namespace MyRentVehicles.DAO
                         else if (daodiscriminador == 3)
                         {
                             connection.disconnect();
-                            Vehicles v = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca,daopassageiro);
+                            Vehicles v = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
                             return v;
                         }
                         else if (daodiscriminador == 4)
                         {
                             connection.disconnect();
-                            Vehicles v = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca,daocarga);
+                            Vehicles v = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
                             return v;
                         }
                         else
@@ -159,12 +159,12 @@ namespace MyRentVehicles.DAO
                         }
 
 
-                        
+
                     }
                 }
-            
+
                 connection.disconnect();
-               
+
                 return null;
             }
             catch (SqlException)
@@ -179,6 +179,234 @@ namespace MyRentVehicles.DAO
 
         }
 
+
+        public List<Vehicles> RecueByType(int type)
+        {
+            cmd = new SqlCommand();
+            connection = new Connection();
+            //comando sql ---
+            cmd.CommandText = "select * from locadora.dbo.Vehicle where discriminador = @discriminador ";
+            cmd.Parameters.AddWithValue("discriminador", type);
+            List<Vehicles> vehiclelist = new List<Vehicles>();
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+
+                        String daoplaca = (string)dr["placa"];
+                        String daomodelo = (string)dr["modelo"];
+                        String daomarca = (string)dr["marca"];
+                        int daoano = (int)dr["ano"];
+                        double daovaloravaliado = (double)dr["valoravaliado"];
+                        double daovalordiaria = (double)dr["valordiaria"];
+                        int daocategoriacarro = (int)dr["categoriacarro"];
+                        int daocarga = (int)dr["carga"];
+                        int daocilindrada = (int)dr["cilindrada"];
+                        int daopassageiro = (int)dr["passageiro"];
+
+
+                        //can do by Enum remake later 
+                        if (type == 1)
+                        {
+                            Vehicles v = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
+
+                            vehiclelist.Add(v);
+
+
+                        }
+                        else if (type == 2)
+                        {
+
+                            Vehicles v = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
+
+
+                            vehiclelist.Add(v);
+
+                        }
+                        else if (type == 3)
+                        {
+
+                            Vehicles v = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
+
+
+                            vehiclelist.Add(v);
+
+                        }
+                        else if (type == 4)
+                        {
+                            Vehicles v = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
+
+
+                            vehiclelist.Add(v);
+                        }
+                        else
+                        {
+                            connection.disconnect();
+
+                            return null;
+                        }
+
+
+
+                    }
+                }
+
+                connection.disconnect();
+
+                return vehiclelist;
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+                return null;
+            }
+
+        }
+
+        public void updateValueVehiclesBytype(int tipo, double value)
+        {
+
+            cmd = new SqlCommand();
+            connection = new Connection();
+            //comando sql ---
+            cmd.CommandText = "update locadora.dbo.Vehicle set valoravaliado = @valoravaliado where discriminador = @discriminador";
+            //parametros 
+            cmd.Parameters.AddWithValue("@discriminador", tipo);
+            cmd.Parameters.AddWithValue("@valoravaliado", value);
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                //close
+                connection.disconnect();
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+
+            }
+
+        }
+
+        public void updateValueALLVehicles(double value)
+        {
+
+            cmd = new SqlCommand();
+            connection = new Connection();
+            //comando sql ---
+            cmd.CommandText = "update locadora.dbo.Vehicle set valoravaliado = @valoravaliado";
+            //parametros 
+            cmd.Parameters.AddWithValue("@valoravaliado", value);
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                //close
+                connection.disconnect();
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+
+            }
+
+        }
+
+        public void updateDailyVehiclesByType(int tipo, double value)
+        {
+
+            cmd = new SqlCommand();
+            connection = new Connection();
+            //comando sql ---
+            cmd.CommandText = "update locadora.dbo.Vehicle set valordiaria = @valordiaria where discriminador = @discriminador";
+            //parametros 
+            cmd.Parameters.AddWithValue("@discriminador", tipo);
+            cmd.Parameters.AddWithValue("@valordiaria", value);
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                //close
+                connection.disconnect();
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+
+            }
+
+        }
+        public void updateDailyALLVehicles(double value)
+        {
+
+            cmd = new SqlCommand();
+            connection = new Connection();
+            //comando sql ---
+            cmd.CommandText = "update locadora.dbo.Vehicle set valordiaria = @valordiaria";
+
+            cmd.Parameters.AddWithValue("@valordiaria", value);
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                //close
+                connection.disconnect();
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+
+            }
+
+        }
+
+
+        public void deleteByPlate(String plate)
+        {
+            connection = new Connection();
+            cmd = new SqlCommand();
+            //comando sql ---
+            cmd.CommandText = "delete from locadora.dbo.Vehicle where placa  = @placa";
+            cmd.Parameters.AddWithValue("@valordiaria", plate);
+
+
+            try
+            { //conectar com baNCO de dados
+                cmd.Connection = connection.connect();
+                //executar comandos 
+                cmd.ExecuteNonQuery();
+                //desconectar
+                connection.disconnect();
+                //mostrar mensagem de erro ou sucesso
+                this.mensagem = "apagado";
+            }
+            catch (SqlException)
+            {
+
+                this.mensagem = "erro ao se conectar banco de dados";
+            }
+
+        }
 
         public void deleteAll()
         {

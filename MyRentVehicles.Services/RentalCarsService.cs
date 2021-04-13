@@ -95,10 +95,10 @@ namespace MyRentVehicles.Services
         // metodo precisa ser revisto para adequar aos 3 tipos de testes 
         public bool registerDevolution(String plate)
         {
-
+            DAORent daorent = new DAORent();
             if (rentedTransport(plate) != null)
             {
-                RentRepository.Remove(rentedTransport(plate));
+                daorent.deleteByPlate(plate);
                 //se entrar na condicional o transporte é removido da lista aluguel e conclui a devolução
                 return true;
             }
@@ -107,19 +107,19 @@ namespace MyRentVehicles.Services
 
         //add a info that gives until what date the vehicle will be rent 
         //metodo consultar aluguel
-        public void consultRent()
-        {
-            VehicleService v = new VehicleService();
-            int days;
-            String plate;
+        //public void consultRent()
+        //{
+        //    VehicleService v = new VehicleService();
+        //    int days;
+        //    String plate;
 
-            Console.WriteLine("digite a placa do veiculo desejado\n");
-            plate = Console.ReadLine();
-            Console.WriteLine("digite a quantidade de dias\n");
-            days = Console.Read();
-            Console.WriteLine($"valor do aluguel: {v.calculateRent(plate, days)}");
+        //    Console.WriteLine("digite a placa do veiculo desejado\n");
+        //    plate = Console.ReadLine();
+        //    Console.WriteLine("digite a quantidade de dias\n");
+        //    days = Console.Read();
+        //    Console.WriteLine($"valor do aluguel: {v.calculateRent(plate, days)}");
 
-        }
+        //}
 
 
 

@@ -25,7 +25,7 @@ namespace MyRentVehicles.Test
 
             locadora.registerVehicles(carro1);
 
-           // Assert.False(locadora.registerVehicles(carro1));
+             Assert.False(locadora.registerVehicles(carro1));
 
             Vehicles recuperado = locadora.searchPlate("LVF-1000");
 
@@ -46,7 +46,7 @@ namespace MyRentVehicles.Test
         [Test]
         public void testInsertClient()
         {
-       
+
             ClientService locadora = new ClientService();
 
             Client cli1 = new Client("41484", "Zé Carlos");
@@ -60,18 +60,18 @@ namespace MyRentVehicles.Test
             locadora.registerClient(cli4);
             locadora.registerClient(cli1);
             locadora.registerClient(cli5);
-          //  daoclient.deletebyCPF("1234");
+         
             locadora.searchCpf("1234");
 
             locadora.searchCpf("010203");
 
             locadora.searchCpf("74574");
 
-            //Assert.False(locadora.registerClient(cli1));
+            Assert.False(locadora.registerClient(cli1));
 
             Client cli2 = locadora.searchCpf("41484");
 
-           Assert.AreEqual("Zé Carlos", cli2.Name);
+            Assert.AreEqual("Zé Carlos", cli2.Name);
 
 
         }
@@ -113,9 +113,9 @@ namespace MyRentVehicles.Test
         {
             VehicleService locadora = new VehicleService();
 
-            //Vehicles carro1 = new Car("Ford", "F-1000", 1980, 10000, 50, "LVF-1000", 3);
+            Vehicles carro1 = new Car("Ford", "F-1000", 1980, 10000, 50, "LVF-1000", 3);
 
-            //Vehicles carro2 = new Car("Ford", "KA", 2010, 30000, 100, "LVF-3000", 1);
+            Vehicles carro2 = new Car("Ford", "KA", 2010, 30000, 100, "LVF-3000", 1);
 
             Vehicles onibus1 = new Bus("Estrela", "Aldebarã", 1975, 30000, 60, "X-911", 49);
 
@@ -123,8 +123,8 @@ namespace MyRentVehicles.Test
 
             Vehicles onibus3 = new Bus("Cálcio Motores", "Bicusp", 1985, 50000, 85, "W-321", 70);
 
-            // locadora.registerVehicles(carro1);
-            //locadora.registerVehicles(carro2);
+             locadora.registerVehicles(carro1);
+            locadora.registerVehicles(carro2);
 
 
             locadora.registerVehicles(onibus1);
@@ -323,7 +323,7 @@ namespace MyRentVehicles.Test
 
 
 
-            
+
 
 
 
