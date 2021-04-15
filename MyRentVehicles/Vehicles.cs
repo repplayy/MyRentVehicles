@@ -31,7 +31,7 @@ namespace MyRentVehicles.Entities
 			this.Tipo = tipo;
 		}
 		
-		public double valorSeguro(int opcao)
+		public  double valorSeguro(int opcao)
 		{
 			//opcao moto
 			if (opcao == 1)

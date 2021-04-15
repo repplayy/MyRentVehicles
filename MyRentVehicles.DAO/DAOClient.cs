@@ -9,35 +9,24 @@ namespace MyRentVehicles.DAO
     public class DAOClient
     {
 
-
-
-        Connection connection;
-        SqlCommand cmd;
-        SqlDataReader dr;
-        // SqlDataAdapter da;
+        DAOConnection connection;
+        SqlCommand command;
+        SqlDataReader datareader;
         public String mensagem;
-
 
         public void save(Client client)
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "insert into locadora.dbo.Client(CPF,Name) values (@CPF,@Name)";
-            //parametros 
-            cmd.Parameters.AddWithValue("CPF", client.CPF);
-            cmd.Parameters.AddWithValue("Name", client.Name);
-
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "insert into locadora.dbo.Client(CPF,Name) values (@CPF,@Name)";
+            command.Parameters.AddWithValue("CPF", client.CPF);
+            command.Parameters.AddWithValue("Name", client.Name);
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //desconectar
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
-                //mostrar mensagem de erro ou sucesso
-                this.mensagem = "cadastraado com sucesso";
             }
             catch (SqlException)
             {
@@ -45,40 +34,30 @@ namespace MyRentVehicles.DAO
                 this.mensagem = "erro ao se conectar banco de dados";
             }
 
-
         }
 
         public Client rescueCPF(string cpf)
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "select * from locadora.dbo.Client where CPF =  @CPF";
-            //parametros 
-            cmd.Parameters.AddWithValue("@CPF", cpf);
-
-
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "select * from locadora.dbo.Client where CPF =  @CPF";
+            command.Parameters.AddWithValue("@CPF", cpf);
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                dr = cmd.ExecuteReader();
-                //if (!dr.NextResult())
-                //{
-                if (dr.HasRows)
+            { 
+                command.Connection = connection.connect();
+                datareader = command.ExecuteReader();
+                if (datareader.HasRows)
                 {
-                    while (dr.Read())
+                    while (datareader.Read())
                     {
-                        String daonome = (string)dr["Name"];
-                        String daocpf = (string)dr["Name"];
+                        String daonome = (string)datareader["Name"];
+                        String daocpf = (string)datareader["Name"];
                         connection.disconnect();
                         Client c = new Client(daocpf, daonome);
                         return c;
                     }
                 }
-
-
 
                 connection.disconnect();
                 return null;
@@ -95,24 +74,18 @@ namespace MyRentVehicles.DAO
         }
         public void updateNameClient(String cpf, String name)
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "update  locadora.dbo.Client set Name = @Name where CPF = @CPF";
-            //parametros 
-            cmd.Parameters.AddWithValue("CPF", cpf);
-            cmd.Parameters.AddWithValue("Name", name);
-
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "update  locadora.dbo.Client set Name = @Name where CPF = @CPF";
+            command.Parameters.AddWithValue("CPF", cpf);
+            command.Parameters.AddWithValue("Name", name);
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //desconectar
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
-                //mostrar mensagem de erro ou sucesso
-                this.mensagem = "cadastraado com sucesso";
+                this.mensagem = "atualizado com sucesso";
             }
             catch (SqlException)
             {
@@ -120,28 +93,21 @@ namespace MyRentVehicles.DAO
                 this.mensagem = "erro ao se conectar banco de dados";
             }
 
-
         }
-
 
         public void deletebyCPF(String cpf)
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "delete from locadora.dbo.Client where CPF = @CPF";
-            cmd.Parameters.AddWithValue("@CPF", cpf);
-
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "delete from locadora.dbo.Client where CPF = @CPF";
+            command.Parameters.AddWithValue("@CPF", cpf);
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //desconectar
+            {
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
-                //mostrar mensagem de erro ou sucesso
-                this.mensagem = "apagado";
+                this.mensagem = "Client delete";
             }
             catch (SqlException)
             {
@@ -152,22 +118,16 @@ namespace MyRentVehicles.DAO
         }
         public void deleteAll()
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "delete from locadora.dbo.Client";
-
-
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "delete from locadora.dbo.Client";
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //desconectar
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
-                //mostrar mensagem de erro ou sucesso
-                this.mensagem = "apagado";
+                this.mensagem = "data delete";
             }
             catch (SqlException)
             {

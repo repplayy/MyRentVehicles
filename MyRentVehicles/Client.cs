@@ -7,7 +7,6 @@ namespace MyRentVehicles.Entities
     public class Client
     {
 
-
         public String CPF { get; set; }
         public String Name { get; set; }
 

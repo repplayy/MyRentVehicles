@@ -10,8 +10,6 @@ namespace MyRentVehicles.Entities
 
 		public int Cilindradas { get; set; }
 
-
-		//contrutor para carro
 		public Motorcycle(String marca, String modelo, int anoFabricacao, double valorAvaliadoDoBem, double valorDiaria, String placa, int cilindradas)
 		{
 

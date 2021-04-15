@@ -8,9 +8,6 @@ namespace MyRentVehicles.Entities
     {
 		public int CapacidadeCarga { get; set; }
 
-
-
-		//contrutor para Onibus
 		public Truck(String marca, String modelo, int anoFabricacao, double valorAvaliadoDoBem, double valorDiaria, String placa, int capacidadeCarga)
 		{
 			base.Marca = marca;

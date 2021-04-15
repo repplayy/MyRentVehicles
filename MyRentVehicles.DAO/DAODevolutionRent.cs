@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using MyRentVehicles.Entities;
-
-
 namespace MyRentVehicles.DAO
 {
-    public class DAORent
+    public class DAODevolutionRent
     {
         DAOConnection connection;
         SqlCommand command;
@@ -18,7 +16,7 @@ namespace MyRentVehicles.DAO
         {
             command = new SqlCommand();
             connection = new DAOConnection();
-            command.CommandText = "insert into locadora.dbo.Rent(CPF,placa,dias) values (@CPF,@placa,@dias)";
+            command.CommandText = "insert into locadora.dbo.DevolutionRent(CPF,placa,dias) values (@CPF,@placa,@dias)";
             command.Parameters.AddWithValue("CPF", rent.CPF);
             command.Parameters.AddWithValue("placa", rent.Placa);
             command.Parameters.AddWithValue("dias", rent.Dias);
@@ -44,7 +42,7 @@ namespace MyRentVehicles.DAO
         {
             command = new SqlCommand();
             connection = new DAOConnection();
-            command.CommandText = "select * from locadora.dbo.Rent where placa = @placa";
+            command.CommandText = "select * from locadora.dbo.DevolutionRent where placa = @placa"; 
             command.Parameters.AddWithValue("@placa", plate);
 
 
@@ -86,7 +84,7 @@ namespace MyRentVehicles.DAO
         {
             command = new SqlCommand();
             connection = new DAOConnection();
-            command.CommandText = "select * from locadora.dbo.Rent where placa = @placa";
+            command.CommandText = "select * from locadora.dbo.DevolutionRent where placa = @placa";
             command.Parameters.AddWithValue("@placa", plate);
 
 
@@ -100,10 +98,10 @@ namespace MyRentVehicles.DAO
                 {
                     while (datareader.Read())
                     {
-                     
+
                         int daodias = (int)datareader["dias"];
                         connection.disconnect();
-                     
+
                         return daodias;
                     }
                 }
@@ -126,7 +124,7 @@ namespace MyRentVehicles.DAO
         {
             command = new SqlCommand();
             connection = new DAOConnection();
-            command.CommandText = "update locadora.dbo.Rent set dias = @dias where placa = @placa";
+            command.CommandText = "update locadora.dbo.DevolutionRent set dias = @dias where placa = @placa";
             command.Parameters.AddWithValue("@placa", plate);
             command.Parameters.AddWithValue("@dias", day);
 
@@ -169,14 +167,14 @@ namespace MyRentVehicles.DAO
         {
             connection = new DAOConnection();
             command = new SqlCommand();
-            command.CommandText = "delete from locadora.dbo.Rent where placa = @placa";
+            command.CommandText = "delete from locadora.dbo.DevolutionRent where placa = @placa";
             command.Parameters.AddWithValue("placa", plate);
 
 
 
             try
             { 
-                command.Connection = connection.connect();
+                command.Connection = connection.connect(); 
                 command.ExecuteNonQuery();
                 connection.disconnect();
                 this.mensagem = "apagado";
@@ -211,6 +209,8 @@ namespace MyRentVehicles.DAO
             }
 
         }
+
+
 
 
     }

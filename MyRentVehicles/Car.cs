@@ -9,10 +9,9 @@ namespace MyRentVehicles.Entities
         public int CategoriaCarro { get; set; }
        
 
-		//contrutor para carro
-		public Car(String marca, String modelo, int anoFabricacao, double valorAvaliadoDoBem, double valorDiaria, String placa, int caterigoriaCarro)
+		public Car(String marca, String modelo, int anoFabricacao, double valorAvaliadoDoBem, double valorDiaria, String placa, int CaterigoriaCarro)
 		{
-
+			
 			base.Marca = marca;
 			base.Modelo = modelo;
 			base.AnoFabricacao = anoFabricacao;
@@ -20,7 +19,7 @@ namespace MyRentVehicles.Entities
 			base.ValorDiaria = valorDiaria;
 			base.Placa = placa;
 			base.Tipo = 2;	
-			this.CategoriaCarro = caterigoriaCarro;
+			this.CategoriaCarro = CaterigoriaCarro;
 
 		}
 

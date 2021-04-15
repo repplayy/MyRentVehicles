@@ -9,40 +9,28 @@ namespace MyRentVehicles.Services
 {
     public class ClientService
     {
-       public ClientService()
+        //this constructor is only to use in the test fase 
+        public ClientService()
         {
             DAOClient client = new DAOClient();
             client.deleteAll();
-
-
         }
 
-        public List<Client> ClientRepository = new List<Client>();
-
-        //insere o clente no repositorio cliente 
         public Client searchCpf(String cpf)
         {
-            DAOClient client = new DAOClient();
-
-            //return ClientRepository.Where(x => x.CPF == cpf)?.FirstOrDefault();
-            return client.rescueCPF(cpf);
+            DAOClient daoclient = new DAOClient();
+            return daoclient.rescueCPF(cpf);
         }
 
-        public Boolean registerClient(Client c)
+        public Boolean registerClient(Client client)
         {
-            DAOClient client = new DAOClient();
-            Client cliente = searchCpf(c.CPF);
-            if (cliente == null)
+            DAOClient daoclient = new DAOClient();
+            if (searchCpf(client.CPF) == null)
             {
-                client.save(c);
+                daoclient.save(client);
                 return true;
             }
             return false;
-            //chama metodo pesquisa 
-
         }
-
-
-
     }
 }

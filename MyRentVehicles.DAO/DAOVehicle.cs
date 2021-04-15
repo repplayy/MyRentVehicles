@@ -8,12 +8,10 @@ namespace MyRentVehicles.DAO
 {
     public class DAOVehicle
     {
-        Connection connection;
-        SqlCommand cmd;
+        DAOConnection connection;
+        SqlCommand command;
         public String mensagem;
-        SqlDataReader dr;
-
-
+        SqlDataReader datareader;
 
         public void save(Vehicles vehicle)
         {
@@ -21,8 +19,8 @@ namespace MyRentVehicles.DAO
             int cargaCaminhao = 0;
             int cilindradas = 0;
             int passageiros = 0;
-            connection = new Connection();
-            cmd = new SqlCommand();
+            connection = new DAOConnection();
+            command = new SqlCommand();
             if (vehicle is Car)
             {
 
@@ -50,28 +48,28 @@ namespace MyRentVehicles.DAO
 
             }
             //comando sql ---
-            cmd.CommandText = "insert into locadora.dbo.Vehicle (placa,marca, modelo, ano,valoravaliado,valordiaria,categoriacarro,carga,cilindrada,passageiro,discriminador) " +
+            command.CommandText = "insert into locadora.dbo.Vehicle (placa,marca, modelo, ano,valoravaliado,valordiaria,categoriacarro,carga,cilindrada,passageiro,discriminador) " +
                 "values (@placa,@marca,@modelo,@ano,@valoravaliado,@valordiaria,@categoriacarro,@carga,@cilindrada,@passageiro,@discriminador)";
             //parametros 
-            cmd.Parameters.AddWithValue("placa", vehicle.Placa);
-            cmd.Parameters.AddWithValue("marca", vehicle.Marca);
-            cmd.Parameters.AddWithValue("modelo", vehicle.Modelo);
-            cmd.Parameters.AddWithValue("ano", vehicle.AnoFabricacao);
-            cmd.Parameters.AddWithValue("valoravaliado", vehicle.ValorAvaliadoDoBem);
-            cmd.Parameters.AddWithValue("valordiaria", vehicle.ValorDiaria);
-            cmd.Parameters.AddWithValue("categoriacarro", categoriaCarro);
-            cmd.Parameters.AddWithValue("carga", cargaCaminhao);
-            cmd.Parameters.AddWithValue("cilindrada", cilindradas);
-            cmd.Parameters.AddWithValue("passageiro", passageiros);
-            cmd.Parameters.AddWithValue("discriminador", vehicle.Tipo);
+            command.Parameters.AddWithValue("placa", vehicle.Placa);
+            command.Parameters.AddWithValue("marca", vehicle.Marca);
+            command.Parameters.AddWithValue("modelo", vehicle.Modelo);
+            command.Parameters.AddWithValue("ano", vehicle.AnoFabricacao);
+            command.Parameters.AddWithValue("valoravaliado", vehicle.ValorAvaliadoDoBem);
+            command.Parameters.AddWithValue("valordiaria", vehicle.ValorDiaria);
+            command.Parameters.AddWithValue("categoriacarro", categoriaCarro);
+            command.Parameters.AddWithValue("carga", cargaCaminhao);
+            command.Parameters.AddWithValue("cilindrada", cilindradas);
+            command.Parameters.AddWithValue("passageiro", passageiros);
+            command.Parameters.AddWithValue("discriminador", vehicle.Tipo);
 
 
 
             try
             { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
+                command.Connection = connection.connect();
                 //executar comandos 
-                cmd.ExecuteNonQuery();
+                command.ExecuteNonQuery();
                 //desconectar
                 connection.disconnect();
                 //mostrar mensagem de erro ou sucesso
@@ -94,62 +92,61 @@ namespace MyRentVehicles.DAO
 
         public Vehicles recueByPlate(String plate)
         {
-            cmd = new SqlCommand();
-            connection = new Connection();
+            command = new SqlCommand();
+            connection = new DAOConnection();
             //comando sql ---
-            cmd.CommandText = "select * from locadora.dbo.Vehicle where placa = @placa";
+            command.CommandText = "select * from locadora.dbo.Vehicle where placa = @placa";
             //parametros 
-            cmd.Parameters.AddWithValue("@placa", plate);
+            command.Parameters.AddWithValue("@placa", plate);
 
 
 
             try
             { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
+                command.Connection = connection.connect();
                 //executar comandos 
-                cmd.ExecuteNonQuery();
-                dr = cmd.ExecuteReader();
-                if (dr.HasRows)
+                command.ExecuteNonQuery();
+                datareader = command.ExecuteReader();
+                if (datareader.HasRows)
                 {
-                    while (dr.Read())
+                    while (datareader.Read())
                     {
-                        String daoplaca = (string)dr["placa"];
-                        String daomodelo = (string)dr["modelo"];
-                        String daomarca = (string)dr["marca"];
-                        int daoano = (int)dr["ano"];
-                        double daovaloravaliado = (double)dr["valoravaliado"];
-                        double daovalordiaria = (double)dr["valordiaria"];
-                        int daocategoriacarro = (int)dr["categoriacarro"];
-                        int daocarga = (int)dr["carga"];
-                        int daocilindrada = (int)dr["cilindrada"];
-                        int daopassageiro = (int)dr["passageiro"];
-                        int daodiscriminador = (int)dr["discriminador"];
+                        String daoplaca = (string)datareader["placa"];
+                        String daomodelo = (string)datareader["modelo"];
+                        String daomarca = (string)datareader["marca"];
+                        int daoano = (int)datareader["ano"];
+                        double daovaloravaliado = (double)datareader["valoravaliado"];
+                        double daovalordiaria = (double)datareader["valordiaria"];
+                        int daocategoriacarro = (int)datareader["categoriacarro"];
+                        int daocarga = (int)datareader["carga"];
+                        int daocilindrada = (int)datareader["cilindrada"];
+                        int daopassageiro = (int)datareader["passageiro"];
+                        int daodiscriminador = (int)datareader["discriminador"];
 
-                        //can do by Enum remake later 
                         if (daodiscriminador == 1)
                         {
                             connection.disconnect();
-                            Vehicles v = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
-                            return v;
+                            Vehicles motorcycle = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
+                            return motorcycle;
 
                         }
                         else if (daodiscriminador == 2)
                         {
                             connection.disconnect();
-                            Vehicles v = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
-                            return v;
+                            Vehicles car = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
+                            return car;
                         }
                         else if (daodiscriminador == 3)
                         {
                             connection.disconnect();
-                            Vehicles v = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
-                            return v;
+                            Vehicles bus = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
+                            return bus;
                         }
                         else if (daodiscriminador == 4)
                         {
                             connection.disconnect();
-                            Vehicles v = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
-                            return v;
+                            Vehicles truck = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
+                            return truck;
                         }
                         else
                         {
@@ -182,69 +179,67 @@ namespace MyRentVehicles.DAO
 
         public List<Vehicles> RecueByType(int type)
         {
-            cmd = new SqlCommand();
-            connection = new Connection();
-            //comando sql ---
-            cmd.CommandText = "select * from locadora.dbo.Vehicle where discriminador = @discriminador ";
-            cmd.Parameters.AddWithValue("discriminador", type);
+            command = new SqlCommand();
+            connection = new DAOConnection();
+            command.CommandText = "select * from locadora.dbo.Vehicle where discriminador = @discriminador ";
+            command.Parameters.AddWithValue("discriminador", type);
             List<Vehicles> vehiclelist = new List<Vehicles>();
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                dr = cmd.ExecuteReader();
-                if (dr.HasRows)
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
+                datareader = command.ExecuteReader();
+                if (datareader.HasRows)
                 {
-                    while (dr.Read())
+                    while (datareader.Read())
                     {
 
-                        String daoplaca = (string)dr["placa"];
-                        String daomodelo = (string)dr["modelo"];
-                        String daomarca = (string)dr["marca"];
-                        int daoano = (int)dr["ano"];
-                        double daovaloravaliado = (double)dr["valoravaliado"];
-                        double daovalordiaria = (double)dr["valordiaria"];
-                        int daocategoriacarro = (int)dr["categoriacarro"];
-                        int daocarga = (int)dr["carga"];
-                        int daocilindrada = (int)dr["cilindrada"];
-                        int daopassageiro = (int)dr["passageiro"];
+                        String daoplaca = (string)datareader["placa"];
+                        String daomodelo = (string)datareader["modelo"];
+                        String daomarca = (string)datareader["marca"];
+                        int daoano = (int)datareader["ano"];
+                        double daovaloravaliado = (double)datareader["valoravaliado"];
+                        double daovalordiaria = (double)datareader["valordiaria"];
+                        int daocategoriacarro = (int)datareader["categoriacarro"];
+                        int daocarga = (int)datareader["carga"];
+                        int daocilindrada = (int)datareader["cilindrada"];
+                        int daopassageiro = (int)datareader["passageiro"];
 
 
-                        //can do by Enum remake later 
+                     
                         if (type == 1)
                         {
-                            Vehicles v = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
+                            Vehicles motorcycle = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
 
-                            vehiclelist.Add(v);
+                            vehiclelist.Add(motorcycle);
 
 
                         }
                         else if (type == 2)
                         {
 
-                            Vehicles v = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
+                            Vehicles car = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
 
 
-                            vehiclelist.Add(v);
+                            vehiclelist.Add(car);
 
                         }
                         else if (type == 3)
                         {
 
-                            Vehicles v = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
+                            Vehicles bus = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
 
 
-                            vehiclelist.Add(v);
+                            vehiclelist.Add(bus);
 
                         }
                         else if (type == 4)
                         {
-                            Vehicles v = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
+                            Vehicles truck = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
 
 
-                            vehiclelist.Add(v);
+                            vehiclelist.Add(truck);
                         }
                         else
                         {
@@ -271,23 +266,113 @@ namespace MyRentVehicles.DAO
 
         }
 
-        public void updateValueVehiclesBytype(int tipo, double value)
-        {
 
-            cmd = new SqlCommand();
-            connection = new Connection();
-            //comando sql ---
-            cmd.CommandText = "update locadora.dbo.Vehicle set valoravaliado = @valoravaliado where discriminador = @discriminador";
-            //parametros 
-            cmd.Parameters.AddWithValue("@discriminador", tipo);
-            cmd.Parameters.AddWithValue("@valoravaliado", value);
+
+        public List<Vehicles> RescueAllVehicle()
+        {
+            command = new SqlCommand();
+            connection = new DAOConnection();
+            command.CommandText = "select * from locadora.dbo.Vehicle";
+            List<Vehicles> vehiclelist = new List<Vehicles>();
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //close
+            {
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
+                datareader = command.ExecuteReader();
+                if (datareader.HasRows)
+                {
+                    while (datareader.Read())
+                    {
+
+                        String daoplaca = (string)datareader["placa"];
+                        String daomodelo = (string)datareader["modelo"];
+                        String daomarca = (string)datareader["marca"];
+                        int daoano = (int)datareader["ano"];
+                        double daovaloravaliado = (double)datareader["valoravaliado"];
+                        double daovalordiaria = (double)datareader["valordiaria"];
+                        int daocategoriacarro = (int)datareader["categoriacarro"];
+                        int daocarga = (int)datareader["carga"];
+                        int daocilindrada = (int)datareader["cilindrada"];
+                        int daopassageiro = (int)datareader["passageiro"];
+                        int daodiscriminador = (int)datareader["discriminador"];
+
+
+
+                        if (daodiscriminador == 1)
+                        {
+                            Vehicles motorcycle = new Motorcycle(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocilindrada);
+
+                            vehiclelist.Add(motorcycle);
+
+
+                        }
+                        else if (daodiscriminador == 2)
+                        {
+
+                            Vehicles car = new Car(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocategoriacarro);
+
+
+                            vehiclelist.Add(car);
+
+                        }
+                        else if (daodiscriminador == 3)
+                        {
+
+                            Vehicles bus = new Bus(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daopassageiro);
+
+
+                            vehiclelist.Add(bus);
+
+                        }
+                        else if (daodiscriminador == 4)
+                        {
+                            Vehicles truck = new Truck(daomarca, daomodelo, daoano, daovaloravaliado, daovalordiaria, daoplaca, daocarga);
+
+
+                            vehiclelist.Add(truck);
+                        }
+                        else
+                        {
+                            connection.disconnect();
+
+                            return null;
+                        }
+
+
+
+                    }
+                }
+
+                connection.disconnect();
+
+                return vehiclelist;
+            }
+            catch (SqlException)
+            {
+                connection.disconnect();
+                this.mensagem = "erro ao se conectar banco de dados";
+                return null;
+            }
+
+        }
+
+
+
+
+        public void updateValueVehiclesByPlate(String plate, double value)
+        {
+
+            command = new SqlCommand();
+            connection = new DAOConnection();
+            command.CommandText = "update locadora.dbo.Vehicle set valoravaliado = @valoravaliado where placa = @placa";
+            command.Parameters.AddWithValue("@placa", plate);
+            command.Parameters.AddWithValue("@valoravaliado", value);
+
+            try
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
             }
             catch (SqlException)
@@ -299,22 +384,20 @@ namespace MyRentVehicles.DAO
 
         }
 
-        public void updateValueALLVehicles(double value)
+
+        public void updateDailyVehiclesByPlate(String plate, double value)
         {
 
-            cmd = new SqlCommand();
-            connection = new Connection();
-            //comando sql ---
-            cmd.CommandText = "update locadora.dbo.Vehicle set valoravaliado = @valoravaliado";
-            //parametros 
-            cmd.Parameters.AddWithValue("@valoravaliado", value);
+            command = new SqlCommand();
+            connection = new DAOConnection();
+            command.CommandText = "update locadora.dbo.Vehicle set valordiaria = @valordiaria where placa = @placa";
+            command.Parameters.AddWithValue("@placa", plate);
+            command.Parameters.AddWithValue("@valordiaria", value);
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //close
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
             }
             catch (SqlException)
@@ -325,79 +408,20 @@ namespace MyRentVehicles.DAO
             }
 
         }
-
-        public void updateDailyVehiclesByType(int tipo, double value)
-        {
-
-            cmd = new SqlCommand();
-            connection = new Connection();
-            //comando sql ---
-            cmd.CommandText = "update locadora.dbo.Vehicle set valordiaria = @valordiaria where discriminador = @discriminador";
-            //parametros 
-            cmd.Parameters.AddWithValue("@discriminador", tipo);
-            cmd.Parameters.AddWithValue("@valordiaria", value);
-
-            try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //close
-                connection.disconnect();
-            }
-            catch (SqlException)
-            {
-                connection.disconnect();
-                this.mensagem = "erro ao se conectar banco de dados";
-
-            }
-
-        }
-        public void updateDailyALLVehicles(double value)
-        {
-
-            cmd = new SqlCommand();
-            connection = new Connection();
-            //comando sql ---
-            cmd.CommandText = "update locadora.dbo.Vehicle set valordiaria = @valordiaria";
-
-            cmd.Parameters.AddWithValue("@valordiaria", value);
-
-            try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //close
-                connection.disconnect();
-            }
-            catch (SqlException)
-            {
-                connection.disconnect();
-                this.mensagem = "erro ao se conectar banco de dados";
-
-            }
-
-        }
-
 
         public void deleteByPlate(String plate)
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "delete from locadora.dbo.Vehicle where placa  = @placa";
-            cmd.Parameters.AddWithValue("@valordiaria", plate);
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "delete from locadora.dbo.Vehicle where placa  = @placa";
+            command.Parameters.AddWithValue("@valordiaria", plate);
 
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //desconectar
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
-                //mostrar mensagem de erro ou sucesso
                 this.mensagem = "apagado";
             }
             catch (SqlException)
@@ -410,21 +434,17 @@ namespace MyRentVehicles.DAO
 
         public void deleteAll()
         {
-            connection = new Connection();
-            cmd = new SqlCommand();
-            //comando sql ---
-            cmd.CommandText = "delete from locadora.dbo.Vehicle";
+            connection = new DAOConnection();
+            command = new SqlCommand();
+            command.CommandText = "delete from locadora.dbo.Vehicle";
 
 
 
             try
-            { //conectar com baNCO de dados
-                cmd.Connection = connection.connect();
-                //executar comandos 
-                cmd.ExecuteNonQuery();
-                //desconectar
+            { 
+                command.Connection = connection.connect();
+                command.ExecuteNonQuery();
                 connection.disconnect();
-                //mostrar mensagem de erro ou sucesso
                 this.mensagem = "apagado";
             }
             catch (SqlException)
@@ -437,10 +457,6 @@ namespace MyRentVehicles.DAO
 
 
     }
-
-
-
-
 
 }
 
